@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Daily Developer - Abdul-moid Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --highlight-color: #FFD700;
+            --ink-black: #0a0a0a;
+            --paper-white: #fafafa;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--paper-white);
+            color: var(--ink-black);
+            overflow-x: hidden;
+        }
+        
+        .font-headline {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .font-mono {
+            font-family: 'Space Mono', monospace;
+        }
+        
+        /* Newspaper Texture */
+        .paper-texture {
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0,0,0,.03) 2px,
+                    rgba(0,0,0,.03) 4px
+                );
+        }
+        
+        /* Fancy Name Animation */
+        .masthead-name {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            background: linear-gradient(45deg, #000 0%, #333 50%, #000 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        
+        /* Yellow Highlight Effect */
+        .highlight-text {
+            background: linear-gradient(120deg, transparent 0%, transparent 100%);
+            background-repeat: no-repeat;
+            background-size: 0% 100%;
+            background-position: 0 88%;
+            transition: background-size 0.8s ease-in-out;
+            padding: 0 4px;
+            box-decoration-break: clone;
+        }
+        
+        .highlight-text.active {
+            background: linear-gradient(120deg, var(--highlight-color) 0%, var(--highlight-color) 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 88%;
+        }
+        
+        /* Text Reveal Animation */
+        .reveal-text {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .reveal-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Stagger Children */
+        .stagger-children > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        
+        .stagger-children.visible > *:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(2) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(3) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(4) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(5) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+        
+        /* Newspaper Borders */
+        .newspaper-border {
+            border: 2px solid #000;
+            position: relative;
+        }
+        
+        .newspaper-border::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            right: -4px;
+            bottom: -4px;
+            border: 1px solid #000;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        /* Column Rule */
+        .column-rule {
+            column-rule: 1px solid #000;
+        }
+        
+        @media (min-width: 768px) {
+            .column-rule {
+                columns: 2;
+                column-gap: 3rem;
+            }
+        }
+        
+        /* Hover Effects */
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 4px 4px 0px 0px #000;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #000;
+            border: 3px solid #f1f1f1;
+        }
+        
+        /* Profile Upgrade Button */
+        .upgrade-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .upgrade-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--highlight-color);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+        
+        .upgrade-btn:hover::before {
+            left: 0;
+        }
+        
+        .upgrade-btn:hover {
+            color: #000;
+        }
+        
+        /* Decorative Elements */
+        .ornament {
+            width: 100%;
+            height: 1px;
+            background: #000;
+            position: relative;
+            margin: 2rem 0;
+        }
+        
+        .ornament::after {
+            content: '§';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--paper-white);
+            padding: 0 1rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 640px) {
+            .masthead-name {
+                font-size: 3rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="paper-texture min-h-screen">
+    
+    <!-- Header Section -->
+    <header class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4 border-b-4 border-black">
+        <!-- Top Bar -->
+        <div class="flex justify-between items-center text-xs font-mono uppercase tracking-widest mb-4 border-b border-black pb-2">
+            <span>Vol. MMXXIV</span>
+            <span>Lahore Edition</span>
+            <span>Price: Free</span>
+        </div>
+        
+        <!-- Masthead -->
+        <div class="text-center py-8 relative">
+            <h1 class="masthead-name text-5xl sm:text-7xl md:text-8xl lg:text-9xl mb-4 reveal-text">
+                ABDUL-MOID
+            </h1>
+            <div class="ornament"></div>
+            <p class="font-headline text-xl sm:text-2xl italic text-gray-800 reveal-text" style="transition-delay: 0.2s;">
+                Computer Scientist • Developer • Creator
+            </p>
+            <p class="font-mono text-sm mt-4 text-gray-600 reveal-text" style="transition-delay: 0.3s;">
+                BSCS 4th Semester • CGPA 3.25 • UVAS Lahore
+            </p>
+        </div>
+        
+        <!-- Navigation Bar -->
+        <nav class="border-t-2 border-b-2 border-black py-3 mt-6">
+            <ul class="flex flex-wrap justify-center gap-4 sm:gap-8 font-mono text-sm sm:text-base uppercase tracking-wide">
+                <li><a href="#about" class="hover:bg-yellow-300 px-2 py-1 transition-colors">About</a></li>
+                <li><a href="#education" class="hover:bg-yellow-300 px-2 py-1 transition-colors">Education</a></li>
+                <li><a href="#skills" class="hover:bg-yellow-300 px-2 py-1 transition-colors">Expertise</a></li>
+                <li><a href="#projects" class="hover:bg-yellow-300 px-2 py-1 transition-colors">Projects</a></li>
+                <li><a href="#goals" class="hover:bg-yellow-300 px-2 py-1 transition-colors">Vision</a></li>
+                <li><a href="#contact" class="hover:bg-yellow-300 px-2 py-1 transition-colors">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- Breaking News Banner -->
+        <div class="bg-black text-white p-4 mb-12 overflow-hidden">
+            <div class="flex items-center justify-center gap-4 animate-pulse">
+                <span class="font-mono text-xs uppercase tracking-widest">Breaking News</span>
+                <span class="font-headline text-lg sm:text-xl">Developer from Lahore Making Waves in Tech Scene</span>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <section id="about" class="mb-16">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="md:col-span-2">
+                    <h2 class="font-headline text-4xl sm:text-5xl font-bold mb-6 reveal-text">
+                        <span class="highlight-text">The Boy from Lahore</span>
+                    </h2>
+                    <div class="column-rule text-justify leading-relaxed text-lg stagger-children">
+                        <p class="mb-4 reveal-text">
+                            <span class="font-bold text-2xl float-left mr-2 font-headline">A</span>bdul-moid, aged 20, represents the new generation of Pakistani developers bridging traditional education with modern technological innovation. Currently pursuing his Bachelor of Science in Computer Science at the University of Veterinary and Animal Sciences (UVAS), he stands at the precipice of his academic journey, armed with a formidable CGPA of 3.25 and an insatiable appetite for code.
+                        </p>
+                        <p class="mb-4 reveal-text">
+                            Born and raised in the cultural heart of <span class="highlight-text font-bold">Lahore</span>, this young developer embodies the spirit of Punjab's tech revolution. His academic foundation was laid at <span class="highlight-text">Allied School</span> (Matriculation: 80%) and further strengthened at <span class="highlight-text">Government College</span> (Intermediate: 70%), institutions that shaped his analytical mindset.
+                        </p>
+                        <p class="reveal-text">
+                            Beyond the screen, Abdul-moid is a multifaceted individual. His passion for <span class="highlight-text">football</span> keeps him grounded in teamwork and strategy, while <span class="highlight-text">photography</span> sharpens his eye for detail—an invaluable asset in UI/UX design. A cinephile at heart, he finds inspiration in cinema's storytelling techniques, often applying narrative structures to his code architecture.
+                        </p>
+                    </div>
+                </div>
+                <div class="md:col-span-1">
+                    <div class="newspaper-border p-6 bg-white sticky top-8 hover-lift reveal-text">
+                        <div class="aspect-square bg-gray-200 mb-4 border-2 border-black overflow-hidden">
+                            <img src="http://static.photos/workspace/640x360/42" alt="Developer Workspace" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500">
+                        </div>
+                        <p class="font-mono text-xs uppercase tracking-wide text-center border-t border-black pt-2">Fig. 1: The Workspace</p>
+                        <div class="mt-4 space-y-2 text-sm font-mono">
+                            <div class="flex justify-between border-b border-gray-300 pb-1">
+                                <span>Age:</span>
+                                <span class="font-bold">20 Years</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-300 pb-1">
+                                <span>Origin:</span>
+                                <span class="font-bold">Lahore, PK</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-300 pb-1">
+                                <span>Status:</span>
+                                <span class="font-bold">4th Semester</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>CGPA:</span>
+                                <span class="highlight-text font-bold px-1">3.25</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Timeline -->
+        <section id="education" class="mb-16 border-t-2 border-black pt-12">
+            <h2 class="font-headline text-4xl sm:text-5xl font-bold mb-8 text-center reveal-text">
+                Academic <span class="highlight-text">Chronicles</span>
+            </h2>
+            
+            <div class="grid sm:grid-cols-3 gap-6 stagger-children">
+                <div class="newspaper-border p-6 bg-white hover-lift reveal-text">
+                    <div class="text-4xl font-black font-headline mb-2">80<span class="text-xl">%</span></div>
+                    <h3 class="font-bold text-lg mb-1">Matriculation</h3>
+                    <p class="font-mono text-sm text-gray-600 mb-2">Allied School</p>
+                    <p class="text-sm">Foundation of academic excellence laid with distinction in science subjects.</p>
+                </div>
+                
+                <div class="newspaper-border p-6 bg-white hover-lift reveal-text">
+                    <div class="text-4xl font-black font-headline mb-2">70<span class="text-xl">%</span></div>
+                    <h3 class="font-bold text-lg mb-1">Intermediate</h3>
+                    <p class="font-mono text-sm text-gray-600 mb-2">Government College</p>
+                    <p class="text-sm">Pre-engineering focus developing analytical and problem-solving capabilities.</p>
+                </div>
+                
+                <div class="newspaper-border p-6 bg-white border-4 border-black hover-lift reveal-text relative">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-yellow-300 px-3 py-1 text-xs font-bold font-mono uppercase">Current</div>
+                    <div class="text-4xl font-black font-headline mb-2">3.25</div>
+                    <h3 class="font-bold text-lg mb-1">BSCS</h3>
+                    <p class="font-mono text-sm text-gray-600 mb-2">UVAS Lahore</p>
+                    <p class="text-sm">4th Semester Computer Science major specializing in software engineering.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Grid -->
+        <section id="skills" class="mb-16">
+            <h2 class="font-headline text-4xl sm:text-5xl font-bold mb-8 border-b-2 border-black pb-4 reveal-text">
+                Technical <span class="highlight-text">Arsenal</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
+                <!-- Core Programming -->
+                <div class="space-y-3 reveal-text">
+                    <h3 class="font-mono text-xs uppercase tracking-widest border-b border-black pb-1">Core Programming</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-black rounded-full"></span>
+                            <span class="highlight-text font-medium">Python</span>
+                            <span class="text-xs text-gray-500 ml-auto">Advanced</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-black rounded-full"></span>
+                            <span class="highlight-text font-medium">C Language</span>
+                            <span class="text-xs text-gray-500 ml-auto">Advanced</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-black rounded-full"></span>
+                            <span class="font-medium">OOP Concepts</span>
+                            <span class="text-xs text-gray-500 ml-auto">Expert</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Data & Logic -->
+                <div class="space-y-3 reveal-text">
+                    <h3 class="font-mono text-xs uppercase tracking-widest border-b border-black pb-1">Data & Architecture</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-black rounded-full"></span>
+                            <span class="highlight-text font-medium">DSA</span>
+                            <span class="text-xs text-gray-500 ml-auto">Strong</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-black rounded-full"></span>
+                            <span class="font-medium">DBMS (pgAdmin)</span>
+                            <span class="text-xs text-gray-500 ml-auto">Proficient</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-black rounded-full"></span>
+                            <span class="font-medium">Digital Logic</span>
+                            <span class="text-xs text-gray-500 ml-auto">Advanced</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Development -->
+                <div class="space-y-3 reveal-text">
+                    <h3 class="font-mono text-xs uppercase tracking-widest border-b border-black pb-1">Development</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-black rounded-full"></span>
+                            <span class="highlight-text font-medium">Unity Engine</span>
+                            <span class="text-xs text-gray-500 ml-auto">App Dev</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-black rounded-full"></span>
+                            <span class="font-medium">System Design</span>
+                            <span class="text-xs text-gray-500 ml-auto">Intermediate</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-black rounded-full"></span>
+                            <span class="font-medium">Database Systems</span>
+                            <span class="text-xs text-gray-500 ml-auto">Advanced</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Showcase -->
+        <section id="projects" class="mb-16 border-t-2 border-black pt-12">
+            <h2 class="font-headline text-4xl sm:text-5xl font-bold mb-8 reveal-text">
+                Engineering <span class="highlight-text">Portfolio</span>
+            </h2>
+            
+            <div class="grid gap-8">
+                <!-- Project 1 -->
+                <article class="newspaper-border p-6 sm:p-8 bg-white hover-lift reveal-text group">
+                    <div class="flex flex-col sm:flex-row gap-6">
+                        <div class="sm:w-1/4">
+                            <span class="font-mono text-xs uppercase tracking-widest text-gray-500">System Design</span>
+                            <h3 class="font-headline text-2xl font-bold mt-2 mb-4 group-hover:text-yellow-600 transition-colors">Bank Management System</h3>
+                            <div class="w-full h-32 bg-gray-100 border border-black overflow-hidden">
+                                <img src="http://static.photos/finance/320x240/101" alt="Bank System" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                            </div>
+                        </div>
+                        <div class="sm:w-3/4">
+                            <p class="text-lg leading-relaxed mb-4 column-rule">
+                                A comprehensive banking solution developed using advanced <span class="highlight-text">Data Structures and Algorithms</span>. This system implements secure transaction processing, account management, and real-time balance updates. Features include multi-threading support for concurrent transactions and encrypted data storage protocols.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mt-4">
+                                <span class="px-3 py-1 bg-black text-white text-xs font-mono">C++</span>
+                                <span class="px-3 py-1 border border-black text-xs font-mono">DSA</span>
+                                <span class="px-3 py-1 border border-black text-xs font-mono">File Handling</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Project 2 -->
+                <article class="newspaper-border p-6 sm:p-8 bg-white hover-lift reveal-text group">
+                    <div class="flex flex-col sm:flex-row gap-6">
+                        <div class="sm:w-1/4">
+                            <span class="font-mono text-xs uppercase tracking-widest text-gray-500">E-Commerce</span>
+                            <h3 class="font-headline text-2xl font-bold mt-2 mb-4 group-hover:text-yellow-600 transition-colors">Online Store Management</h3>
+                            <div class="w-full h-32 bg-gray-100 border border-black overflow-hidden">
+                                <img src="http://static.photos/retail/320x240/202" alt="Online Store" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                            </div>
+                        </div>
+                        <div class="sm:w-3/4">
+                            <p class="text-lg leading-relaxed mb-4">
+                                Dual implementation of an e-commerce platform showcasing both <span class="highlight-text">Data Structures</span> and <span class="highlight-text">Database Management Systems</span> expertise. The DSA version features optimized search algorithms and inventory trees, while the DBMS implementation utilizes <span class="font-mono bg-gray-100 px-1">pgAdmin</span> for relational data management, complex queries, and ACID compliance.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mt-4">
+                                <span class="px-3 py-1 bg-black text-white text-xs font-mono">SQL</span>
+                                <span class="px-3 py-1 border border-black text-xs font-mono">pgAdmin</span>
+                                <span class="px-3 py-1 border border-black text-xs font-mono">Python</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Project 3 -->
+                <article class="newspaper-border p-6 sm:p-8 bg-white hover-lift reveal-text group">
+                    <div class="flex flex-col sm:flex-row gap-6">
+                        <div class="sm:w-1/4">
+                            <span class="font-mono text-xs uppercase tracking-widest text-gray-500">Utility Software</span>
+                            <h3 class="font-headline text-2xl font-bold mt-2 mb-4 group-hover:text-yellow-600 transition-colors">File Explorer System</h3>
+                            <div class="w-full h-32 bg-gray-100 border border-black overflow-hidden">
+                                <img src="http://static.photos/technology/320x240/303" alt="File System" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                            </div>
+                        </div>
+                        <div class="sm:w-3/4">
+                            <p class="text-lg leading-relaxed mb-4">
+                                An advanced file management system built from scratch using <span class="highlight-text">Tree Data Structures</span> and <span class="highlight-text">Graph Algorithms</span>. Implements directory traversal, file search optimization using B-trees, and memory-efficient caching. Features recursive operations and real-time directory monitoring.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mt-4">
+                                <span class="px-3 py-1 bg-black text-white text-xs font-mono">Trees</span>
+                                <span class="px-3 py-1 border border-black text-xs font-mono">Graphs</span>
+                                <span class="px-3 py-1 border border-black text-xs font-mono">OS Concepts</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Project 4 - Featured -->
+                <article class="newspaper-border p-6 sm:p-8 bg-white border-4 border-black relative hover-lift reveal-text group">
+                    <div class="absolute -top-4 left-6 bg-yellow-300 px-4 py-1 font-mono text-xs font-bold uppercase tracking-widest border-2 border-black">Featured</div>
+                    <div class="flex flex-col sm:flex-row gap-6 mt-4">
+                        <div class="sm:w-1/3">
+                            <span class="font-mono text-xs uppercase tracking-widest text-gray-500">Mobile Gaming</span>
+                            <h3 class="font-headline text-3xl font-bold mt-2 mb-4 group-hover:text-yellow-600 transition-colors">Beat The Speed</h3>
+                            <div class="w-full h-48 bg-gray-100 border-2 border-black overflow-hidden relative">
+                                <img src="http://static.photos/gaming/320x240/404" alt="Beat The Speed Game" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                                <div class="absolute bottom-0 left-0 right-0 bg-black text-white text-xs font-mono p-2 text-center">Android • Unity</div>
+                            </div>
+                        </div>
+                        <div class="sm:w-2/3 flex flex-col justify-center">
+                            <p class="text-xl leading-relaxed mb-6 font-headline italic">
+                                "A high-octane racing experience pushing the boundaries of mobile gaming performance."
+                            </p>
+                            <p class="text-base leading-relaxed mb-4">
+                                Developed using the <span class="highlight-text font-bold">Unity Game Engine</span>, this Android application represents Abdul-moid's foray into mobile game development. <span class="highlight-text">Beat the Speed</span> features physics-based driving mechanics, progressive difficulty algorithms, and optimized rendering pipelines for mid-range devices. The game demonstrates proficiency in C# scripting, Unity's component architecture, and mobile optimization techniques.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-black text-white text-xs font-mono">Unity 3D</span>
+                                <span class="px-3 py-1 border-2 border-black text-xs font-mono">C#</span>
+                                <span class="px-3 py-1 border-2 border-black text-xs font-mono">Android SDK</span>
+                                <span class="px-3 py-1 border-2 border-black text-xs font-mono">Game Design</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Future Goals -->
+        <section id="goals" class="mb-16 border-t-2 border-black pt-12">
+            <h2 class="font-headline text-4xl sm:text-5xl font-bold mb-8 text-center reveal-text">
+                The <span class="highlight-text">Road Ahead</span>
+            </h2>
+            
+            <div class="bg-white newspaper-border p-8 md:p-12 reveal-text">
+                <div class="grid md:grid-cols-2 gap-8 md:gap-12">
+                    <div class="space-y-6">
+                        <h3 class="font-headline text-2xl font-bold border-b-2 border-black pb-2">Professional Vision</h3>
+                        <p class="leading-relaxed">
+                            Abdul-moid aims to transcend the boundaries between traditional software engineering and modern cloud architecture. His immediate trajectory includes mastering <span class="highlight-text">Full-Stack Development</span> with the MERN stack, while simultaneously diving deep into <span class="highlight-text">DevOps</span> practices and containerization technologies.
+                        </p>
+                        <p class="leading-relaxed">
+                            The long-term vision encompasses contributing to open-source projects that democratize technology access in South Asia, with particular focus on EdTech solutions leveraging his Unity experience for interactive learning environments.
+                        </p>
+                    </div>
+                    <div class="space-y-6">
+                        <h3 class="font-headline text-2xl font-bold border-b-2 border-black pb-2">Academic Pursuits</h3>
+                        <ul class="space-y-4">
+                            <li class="flex gap-4">
+                                <span class="font-mono text-sm font-bold text-gray-400">01</span>
+                                <div>
+                                    <strong class="block font-headline text-lg">MS Computer Science</strong>
+                                    <span class="text-sm text-gray-600">Specialization in AI/ML Systems</span>
+                                </div>
+                            </li>
+                            <li class="flex gap-4">
+                                <span class="font-mono text-sm font-bold text-gray-400">02</span>
+                                <div>
+                                    <strong class="block font-headline text-lg">Cloud Certifications</strong>
+                                    <span class="text-sm text-gray-600">AWS & Azure Architecture</span>
+                                </div>
+                            </li>
+                            <li class="flex gap-4">
+                                <span class="font-mono text-sm font-bold text-gray-400">03</span>
+                                <div>
+                                    <strong class="block font-headline text-lg">Tech Entrepreneurship</strong>
+                                    <span class="text-sm text-gray-600">Launching GameUp Studios officially</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-8 pt-8 border-t border-black text-center">
+                    <p class="font-mono text-sm uppercase tracking-widest text-gray-500 mb-2">Current Mission</p>
+                    <p class="font-headline text-xl sm:text-2xl italic">
+                        "Bridging Lahore's streets with Silicon Valley's innovation, one line of code at a time."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="mb-16">
+            <div class="bg-black text-white p-8 md:p-12 reveal-text">
+                <h2 class="font-headline text-3xl sm:text-4xl font-bold mb-8 text-center">Connect & Collaborate</h2>
+                
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                    <a href="https://www.linkedin.com/in/abdul-moeed-70312b341/" target="_blank" class="group flex items-center gap-4 p-4 border border-white hover:bg-white hover:text-black transition-all duration-300">
+                        <i data-lucide="linkedin" class="w-6 h-6"></i>
+                        <div>
+                            <div class="font-bold">LinkedIn</div>
+                            <div class="text-xs opacity-70 group-hover:opacity-100">Abdul Moeed</div>
+                        </div>
+                    </a>
+                    
+                    <a href="https://github.com/Abdulmoidatgit" target="_blank" class="group flex items-center gap-4 p-4 border border-white hover:bg-white hover:text-black transition-all duration-300">
+                        <i data-lucide="github" class="w-6 h-6"></i>
+                        <div>
+                            <div class="font-bold">GitHub</div>
+                            <div class="text-xs opacity-70 group-hover:opacity-100">@Abdulmoidatgit</div>
+                        </div>
+                    </a>
+                    
+                    <a href="https://instagram.com/offside_moid" target="_blank" class="group flex items-center gap-4 p-4 border border-white hover:bg-white hover:text-black transition-all duration-300">
+                        <i data-lucide="instagram" class="w-6 h-6"></i>
+                        <div>
+                            <div class="font-bold">Instagram</div>
+                            <div class="text-xs opacity-70 group-hover:opacity-100">@offside_moid</div>
+                        </div>
+                    </a>
+                    
+                    <a href="https://x.com/gameup_studios" target="_blank" class="group flex items-center gap-4 p-4 border border-white hover:bg-white hover:text-black transition-all duration-300">
+                        <i data-lucide="twitter" class="w-6 h-6"></i>
+                        <div>
+                            <div class="font-bold">X (Twitter)</div>
+                            <div class="text-xs opacity-70 group-hover:opacity-100">@gameup_studios</div>
+                        </div>
+                    </a>
+                    
+                    <a href="mailto:aloogamerz068@gmail.com" class="group flex items-center gap-4 p-4 border border-white hover:bg-white hover:text-black transition-all duration-300 sm:col-span-2 lg:col-span-1">
+                        <i data-lucide="mail" class="w-6 h-6"></i>
+                        <div>
+                            <div class="font-bold">Email</div>
+                            <div class="text-xs opacity-70 group-hover:opacity-100 break-all">aloogamerz068@gmail.com</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Upgrade -->
+        <section class="text-center pb-16">
+            <div class="inline-block reveal-text">
+                <button id="upgradeBtn" class="upgrade-btn border-2 border-black px-8 py-4 font-mono font-bold text-lg uppercase tracking-widest hover:scale-105 transition-transform flex items-center gap-3 group">
+                    <i data-lucide="sparkles" class="w-5 h-5 group-hover:animate-spin"></i>
+                    Upgrade Profile
+                    <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+                <p class="text-xs font-mono mt-2 text-gray-500">Click to enhance viewing experience</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t-4 border-black py-8 text-center">
+        <p class="font-mono text-sm text-gray-600 mb-2">© 2024 The Daily Developer. All rights reserved.</p>
+        <p class="font-headline italic text-gray-400">Printed in Lahore, Pakistan</p>
+    </footer>
+
+    <!-- Modal for Upgrade -->
+    <div id="upgradeModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full p-8 newspaper-border text-center">
+            <i data-lucide="zap" class="w-12 h-12 mx-auto mb-4 text-yellow-500"></i>
+            <h3 class="font-headline text-2xl font-bold mb-4">Profile Upgraded! ⚡</h3>
+            <p class="mb-6 text-gray-600">You've unlocked the premium view. Abdul-moid's potential is now at 100% visibility.</p>
+            <button id="closeModal" class="bg-black text-white px-6 py-3 font-mono uppercase text-sm hover:bg-yellow-300 hover:text-black transition-colors">
+                Continue Reading
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+        
+        // Scroll Animation Observer
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible', 'active');
+                    
+                    // Handle stagger children
+                    if (entry.target.classList.contains('stagger-children')) {
+                        entry.target.classList.add('visible');
+                    }
+                    
+                    // Handle highlight text within
+                    const highlights = entry.target.querySelectorAll('.highlight-text');
+                    highlights.forEach(h => h.classList.add('active'));
+                    
+                    if (entry.target.classList.contains('highlight-text')) {
+                        entry.target.classList.add('active');
+                    }
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all reveal elements
+        document.querySelectorAll('.reveal-text, .stagger-children, .highlight-text').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Profile Upgrade Interaction
+        const upgradeBtn = document.getElementById('upgradeBtn');
+        const modal = document.getElementById('upgradeModal');
+        const closeModal = document.getElementById('closeModal');
+        
+        upgradeBtn.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        });
+        
+        closeModal.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        });
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        });
+        
+        // Add parallax effect to masthead
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const masthead = document.querySelector('.masthead-name');
+            if (masthead) {
+                masthead.style.transform = `translateY(${scrolled * 0.2}px)`;
+                masthead.style.opacity = 1 - (scrolled / 500);
+            }
+        });
+        
+        // Easter egg: Konami code
+        let keySequence = [];
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        
+        document.addEventListener('keydown', (e) => {
+            keySequence.push(e.key);
+            keySequence = keySequence.slice(-10);
+            
+            if (keySequence.join(',') === konamiCode.join(',')) {
+                document.body.style.filter = 'invert(1)';
+                setTimeout(() => {
+                    document.body.style.filter = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
